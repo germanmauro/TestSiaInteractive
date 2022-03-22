@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Test Sia Interactive</title>
+</head>
+<body>
+    <div class="container">
+            <video  width="80%" controls loop>
+                <source src="src/video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+    </div>
+    <script>
+        const ws = new WebSocket("ws://localhost:8082");
+        ws.addEventListener("open", ()=> {
+            console.log("Estamos conectados");
+        });
+
+        //Video
+        const video = document.querySelector('video');
+
+        video.addEventListener('play', (event) => {
+            console.log('El video está en play');
+            ws.send("play");
+        });
+
+        video.addEventListener('pause', (event) => {
+            console.log('Se pausó el video');
+            ws.send("pause");
+        });
+
+        // video.addEventListener('timeupdate', (event) => {
+        //     console.log(video.currentTime);
+        //     ws.send(video.currentTime);
+        // });
+
+        ws.addEventListener('message', ({data}) => {
+            if(data == "play")
+            {
+                play();
+            }
+            if(data == "pause")
+            {
+                pause();
+            } 
+        });
+
+        function play() {
+            video.play();
+        }
+
+        function pause() {
+            video.pause();
+        }
+    </script>
+</body>
+</html>
